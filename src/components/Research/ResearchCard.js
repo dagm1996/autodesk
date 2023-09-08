@@ -24,8 +24,8 @@ const ResearchCard = ({
           <div className=" hover:shadow-2xl shadow-lg ease-in-out duration-500">
             <div className="relative flex h-60 justify-center overflow-hidden ">
               <div className="w-full transform transition-transform duration-500 ease-in-out hover:scale-110">
-                {/* <img src={image} alt="" /> */}
-                <img src="https://random.imagecdn.app/500/300" alt="" />
+                <img src={image} alt="" />
+                {/* <img src="https://random.imagecdn.app/500/300" alt="" /> */}
               </div>
             </div>
 
