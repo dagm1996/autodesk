@@ -27,7 +27,7 @@ const Pagination = ({
   }
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = data && data?.slice(indexOfFirstItem, indexOfLastItem);
 
   useEffect(() => {
     getPaginatedItems(currentItems);

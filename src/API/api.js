@@ -7,11 +7,11 @@ const cookie = new Cookie();
 let token = cookie.get("storedAccessToken");
 
 // setting the header
-if (token) axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+// if (token) axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
 // sending the cookie token along with the requests
 const axiosInstance = axios.create({
-  withCredentials: true,
+  // withCredentials: true,
   baseURL: endPoint.BASE_URL,
 });
 

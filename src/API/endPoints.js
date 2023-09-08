@@ -9,7 +9,7 @@ let token = cookie.get("storedAccessToken");
 export const endPoint = {
   BASE_URL: baseURL,
 
-  RESEARCH: `/ResearchTiles?token='${token}'`,
+  RESEARCH: `/researchTiles?`,
 
   BLOG: `/blogTiles?token='${token}'`,
 

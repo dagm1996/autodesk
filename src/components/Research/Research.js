@@ -8,35 +8,41 @@ import ResearchFilter from "./ResearchFilter";
 import { axiosInstance } from "../../API/api";
 import { endPoint } from "../../API/endPoints";
 import { useSelector, useDispatch } from "react-redux";
+import {getAllResearches} from "../DataLayer/reducer/researchReducer"
 
 const Research = () => {
-  const [researches, setResearches] = useState([]);
+  // const [researches, setResearches] = useState([]);
   const [paginatedData, setPaginatedData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [fetchedData, setFetchedData] = useState([]);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
-  // console.log("research comp");
+
+let dispatch = useDispatch()
+let {researches, isLoading, isError} = useSelector((state)=>state.researches)
+
+console.log(researches)
 
   function getPaginatedItems(items) {
     setPaginatedData(items);
   }
 
   useEffect(() => {
-    setIsLoading(true);
-    axiosInstance
-      .get(endPoint.RESEARCH)
-      .then((data) => {
-        setFetchedData(data?.data);
-        setResearches(data?.data);
-        // console.log(data.data);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsLoading(false);
-      });
+    dispatch(getAllResearches())
+    // setIsLoading(true);
+    // axiosInstance
+    //   .get(endPoint.RESEARCH)
+    //   .then((data) => {
+    //     setFetchedData(data?.data);
+    //     setResearches(data?.data);
+    //     // console.log(data.data);
+    //     setIsLoading(false);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     setIsLoading(false);
+    //   });
   }, []);
 
   // category Lists
@@ -46,7 +52,7 @@ const Research = () => {
   return (
     <section>
       {/* Fitter */}
-      <ResearchFilter
+      {/* <ResearchFilter
         category={category}
         setCategory={setCategory}
         categoryList={arrayFromSet}
@@ -57,7 +63,7 @@ const Research = () => {
         setQuery={setQuery}
         date={date}
         setDate={setDate}
-      />
+      /> */}
       {isLoading ? (
         <LoadingComponent />
       ) : (

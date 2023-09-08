@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Filter from "./Filter";
-import Tile from "../Tile";
+import Tile from "./Tile";
 import Cookie from "universal-cookie";
 
 const cookie = new Cookie();
@@ -12,8 +12,6 @@ const ManageDashboard = () => {
     const handleTileAuth = async (token) => {
       try {
         let url = `https://76clz1n9xk.execute-api.us-east-2.amazonaws.com/stage_20230629_v2/dashboardAccess?token=${token}`;
-
-        url = url + token;
 
         fetch(url, {
           method: "GET",

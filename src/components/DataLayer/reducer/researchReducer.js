@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../../API/api";
 import { endPoint } from "../../../API/endPoints";
+import Cookie from "universal-cookie";
 
 const initialState = {
   researches: [],
@@ -8,11 +9,16 @@ const initialState = {
   isError: false,
 };
 
+const cookie = new Cookie();
+
+let token = cookie.get("storedAccessToken");
+
 export const getAllResearches = createAsyncThunk(
   "get/Researches",
   async (name, { rejectWithValue }) => {
-    const response = await axiosInstance.get(endPoint.RESEARCH);
-    const data = response.data;
+    const response = await axiosInstance.get(`${endPoint.RESEARCH}token=${token}`);
+    const data = response?.data?.data;
+    console.log(data)
     if (response.status < 200 || response.status >= 300) {
       return rejectWithValue(data);
     }
