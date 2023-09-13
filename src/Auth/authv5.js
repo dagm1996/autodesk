@@ -3,7 +3,7 @@ import App from "../App";
 import Loading from "../components/Loading";
 import { withAuthenticator } from "@aws-amplify/ui-react";
 import { Navigate, useNavigate, redirect } from "react-router-dom";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 function SSO() {
   const [code, setCode] = useState("");
@@ -23,7 +23,7 @@ function SSO() {
         setAccessToken(storedAccessToken);
       }
     } else {
-       console.log('no stored access token')
+      console.log("no stored access token");
     }
     if (!grantCode && !storedAccessToken) {
       redirectToPage();
@@ -31,14 +31,13 @@ function SSO() {
     setCode(grantCode);
   }, []);
 
-  
   useEffect(() => {
     async function handleTokenVaidation() {
       try {
         if (code) {
           await getUserInfo("authCode", code);
         } else {
-          console.log('dont got code')
+          console.log("dont got code");
         }
       } catch (error) {
         console.log(error);
@@ -49,9 +48,9 @@ function SSO() {
 
   const redirectToPage = () => {
     try {
-      window.location.href =
+      // window.location.href =
       // "https://people-insights.auth.us-east-2.amazoncognito.com/oauth2/authorize?client_id=486jdp55loudfoo165o9ple2ir&response_type=code&scope=email+openid&redirect_uri=https%3A%2F%2Fd1ovk7y7rzi297.cloudfront.net";
-      "https://people-insights.auth.us-east-2.amazoncognito.com/oauth2/authorize?client_id=486jdp55loudfoo165o9ple2ir&response_type=code&scope=email+openid&redirect_uri=http%3A%2F%2Flocalhost%3A3000";
+      // "https://people-insights.auth.us-east-2.amazoncognito.com/oauth2/authorize?client_id=486jdp55loudfoo165o9ple2ir&response_type=code&scope=email+openid&redirect_uri=http%3A%2F%2Flocalhost%3A3000";
     } catch (error) {
       console.log(error);
     }

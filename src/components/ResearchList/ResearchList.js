@@ -12,51 +12,33 @@ import ImageUpload from "../ImageUpload/ImageUpload";
 import CodeEditor from "../CodeEditor/CodeEditor";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
+import { axiosInstance } from "../../API/api";
+import { endPoint } from "../../API/endPoints";
 
 const ResearchTable = () => {
   const [openEditor, setOpenEditor] = useState(false);
   const [file, setFile] = useState(null);
   const [codeValue, setCodeValue] = useState("");
   const [categoryMethod, setCategoryMethod] = useState("select");
+  const [research, setResearch] = useState({});
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
-
-    let {
-      data: { url },
-    } = await axios.get(`http://localhost:8080/secure-url`);
-    console.log(file);
-    console.log(url);
-    try {
-      let response = await axios({
-        url,
-        data: file,
-        method: "PUT",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.log(response);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  let dispatch = useDispatch();
+  let { researches, isLoading, isError } = useSelector(
+    (state) => state.researches
+  );
 
   function ActionBtn({ params, rowId }) {
-    // let department = params.row;
     // console.log(params?.row)
-    // setPatient(department);
 
-    // setPatient(params?.row);
+    const editHandler = () => {
+      console.log(params.row);
+      // setPatient(params?.row);
+      setResearch(params.row);
 
-    //  const editHandler = () => {
-    //    console.log(params.row);
-    //    // setPatient(params?.row);
-    //    setPatient(params.row);
-
-    //    // setOpen(false);
-    //    setIsEditing(true);
-    //  };
+      // setOpen(false);
+      setIsEditing(true);
+    };
 
     //  const deleteHandler = useCallback(() => {
     //    // setPatient(params.row);
@@ -140,45 +122,33 @@ const ResearchTable = () => {
       ),
     },
     {
-      field: "firstName",
+      field: "title",
       headerName: "Title",
       width: 150,
       editable: true,
     },
     {
-      field: "fullName",
+      field: "description",
       headerName: "Description",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
       width: 200,
-      valueGetter: (params) =>
-        `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+      // valueGetter: (params) =>
+      //   `${params.row.firstName || ""} ${params.row.lastName || ""}`,
     },
     {
-      field: "lastName",
+      field: "date",
       headerName: "Year",
       width: 150,
       editable: true,
     },
     {
-      field: "age",
+      field: "category",
       headerName: "Category",
-      type: "number",
+      // type: "number",
       width: 150,
       editable: true,
     },
-  ];
-
-  const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
   ];
 
   const formik = useFormik({
@@ -193,31 +163,30 @@ const ResearchTable = () => {
       researchTitle: Yup.string().required("Please enter research title"),
       researchCategory: Yup.string().required("Please enter research category"),
       researchDate: Yup.string().required("Please enter research date"),
-      // imageUrl: Yup.string().required("Please enter research date"),
     }),
     onSubmit: async (values) => {
       values.htmlContent = codeValue;
 
-      // let {
-      //   data: { url },
-      // } = await axios.get(`http://localhost:8080/secure-url`);
+      let {
+        data: { url },
+      } = await axios.get(`http://localhost:8080/secure-url`);
 
-      // try {
-      //   let response = await axios({
-      //     url,
-      //     data: file,
-      //     method: "PUT",
-      //     headers: {
-      //       "Content-Type": "multipart/form-data",
-      //     },
-      //   });
-      //   values.imageUrl = url.split("?")[0];
-      //   // this is full json data to the provided API
-      //   //console.log(values);
-      // } catch (err) {
-      //   console.log(err);
-      // }
-      console.log(values);
+      try {
+        let response = await axios({
+          url,
+          data: file,
+          method: "PUT",
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        values.imageUrl = url.split("?")[0];
+        // this is full json data to the provided API
+        console.log(values);
+        await axiosInstance.post(endPoint.RESEARCH, values);
+      } catch (err) {
+        console.log(err);
+      }
     },
   });
 
@@ -229,7 +198,7 @@ const ResearchTable = () => {
     }
   };
 
-  let categories = ["cate One", "cate Two", "cate Three"];
+  let categories = researches?.map((item) => item.categories);
 
   return (
     <>
@@ -434,7 +403,7 @@ const ResearchTable = () => {
       {/* Data Grid */}
       <Box sx={{ height: 400, width: "100%", backgroundColor: "white" }}>
         <DataGrid
-          rows={rows}
+          rows={researches}
           columns={columns}
           initialState={{
             pagination: {

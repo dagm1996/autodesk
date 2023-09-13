@@ -1,31 +1,30 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllResearches } from "../DataLayer/reducer/researchReducer";
 
 const ResearchDisplay = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [description, setDescription] = useState([]);
-
+  let dispatch = useDispatch();
   let { researchId } = useParams();
+
+  let { researches, isError } = useSelector((state) => state.researches);
 
   useEffect(() => {
     setIsLoading(true);
-    axios
-      .get("http://localhost:3000/researchData.json")
-      .then((data) => {
-        // console.log(data.data);
-        let foundResearch = data?.data?.find((item) => item.id == researchId);
-        let Desc = foundResearch?.description?.split("\n\n");
-        setDescription(Desc);
-        setData(foundResearch);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsLoading(false);
-      });
+    if (researches?.length === 0) dispatch(getAllResearches());
+
+    let foundResearch = researches?.find(
+      (item) => item.id == decodeURIComponent(researchId)
+    );
+    let Desc = foundResearch?.description?.split("\n\n");
+    setDescription(Desc);
+    setData(foundResearch);
+    setIsLoading(false);
   }, []);
 
   return (
